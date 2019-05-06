@@ -6,7 +6,7 @@ s = 25
 
 def expandDataFrameOnDisk(nPages = 10, filename = 'exampleDataFrame.pkl'):
 
-    df = pd.read_pickle('exampleDataFrame.pkl')
+    df = pd.read_pickle(filename)
 
     tail  = readInAPI(nPages, firstPage= len(df)//25+1)
     df = df.append(tail)
@@ -22,11 +22,10 @@ def loadDataFrame(filename = 'exampleDataFrame.pkl'):
 
 
 def readInAPI(nPages, firstPage = 1):
-    page = 1
-    r = requests.get(f'https://www.keyforgegame.com/api/decks/?page={page}&page_size={s}')
+    r = requests.get(f'https://www.keyforgegame.com/api/decks/?page={firstPage}&page_size={s}')
     j = r.json()
     df = pd.DataFrame(j['data'])
-    for page in range(1,nPages):
+    for page in range(firstPage,nPages + firstPage):
         r = requests.get(f'https://www.keyforgegame.com/api/decks/?page={page}&page_size={s}')
         j = r.json()
         dfTmp = pd.DataFrame(j['data'])
